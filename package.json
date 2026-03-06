@@ -1,0 +1,11 @@
+{
+  "name": "trackerclaw",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Local Solana portfolio and DeFi tracking helpers.",
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.31.1",
+    "@meteora-ag/dlmm": "^1.9.3",
+    "@solana/web3.js": "^1.98.4"
+  }
+}

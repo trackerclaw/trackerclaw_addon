@@ -1,0 +1,11 @@
+[
+    {
+        "name": "Kamino Sentora PYUSD",
+        "vault_address": "A2wsxhA7pF4B2UKVfXocb6TAAP9ipfPJam6oMKgDE5BK",
+        "protocol": "Kamino Vault",
+        "url": "https://app.kamino.finance",
+        "underlying": "PYUSD",
+        "underlying_mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+        "note": "Sentora PYUSD strategy — user deposits tracked via vault share tokens"
+    }
+]
