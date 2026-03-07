@@ -64,6 +64,8 @@ cd {baseDir} && npx tsx scriptsTS/openclaw_portfolio.ts history --days 30
 
 Snapshots are stored in `data/openclaw_snapshots/`.
 
+Persist snapshots over time if OpenClaw needs historical charts. A performance chart requires at least 2 snapshots from different times.
+
 ## Wallet Sources
 
 The runtime can read:
@@ -126,6 +128,58 @@ Use this command shape in OpenClaw tool definitions:
 ```bash
 cd {baseDir} && npx tsx scriptsTS/chart_delivery.ts <portfolio|performance|apy>
 ```
+
+## OpenClaw Routine
+
+Recreate the full chart workflow with this sequence:
+
+1. Install dependencies with `cd {baseDir} && npm install`.
+2. Configure `.env` with `HELIUS_API_KEY` and `JUP_BASIC_API_KEY`.
+3. Ensure wallet input exists through `data/wallets.json`, `myWallets.json`, `myWallets`, `wallets`, or direct wallet arguments.
+4. Use `npx tsx scriptsTS/openclaw_portfolio.ts report` for text or JSON-only portfolio output.
+5. Use `npx tsx scriptsTS/openclaw_portfolio.ts snapshot` to save state.
+6. Repeat snapshot creation on a schedule or after portfolio checks so history accumulates.
+7. Use `npx tsx scriptsTS/chart_delivery.ts portfolio` for current allocation charts.
+8. Use `npx tsx scriptsTS/chart_delivery.ts performance` for historical performance charts.
+9. Use `npx tsx scriptsTS/chart_delivery.ts apy` for DeFi yield charts.
+
+Run `performance` only when snapshots already exist across time. If there are fewer than 2 snapshots, return the TrackerClaw error directly.
+
+## OpenClaw Telegram Engine Changes
+
+Modify the OpenClaw Telegram layer so it can upload a local file path returned by TrackerClaw.
+
+OpenClaw must:
+
+1. Execute `npx tsx scriptsTS/chart_delivery.ts <portfolio|performance|apy>` from the TrackerClaw repo root.
+2. Parse stdout as JSON.
+3. Read `manifest.telegram`.
+4. Verify `manifest.telegram.preferred_file_path` exists on disk.
+5. If `manifest.telegram.preferred_method` is `sendPhoto`, upload `manifest.telegram.preferred_file_path` as a Telegram photo with `manifest.telegram.caption`.
+6. If the preferred upload fails, log the exact error and upload `manifest.telegram.fallback_file_path` with `sendDocument`.
+7. If `manifest.telegram.preferred_method` is `sendDocument`, upload `manifest.telegram.preferred_file_path` directly with `sendDocument`.
+8. Return the exact Telegram or transport error when upload fails.
+
+Assume the returned file path is on the same VPS where OpenClaw runs. Upload it from the filesystem with multipart form-data. Do not treat it as a public URL.
+
+Support this minimal Telegram behavior:
+
+- `sendPhoto(chat_id, file_path, caption)`
+- `sendDocument(chat_id, file_path, caption)`
+
+If OpenClaw only supports text messages today, add file upload support before attempting chart delivery.
+
+## OpenClaw Feedback Loop
+
+After wiring the routine, have OpenClaw report back:
+
+- the exact command it ran
+- the JSON manifest or the parse error
+- whether the preferred file path existed
+- whether it used `sendPhoto` or `sendDocument`
+- the exact Telegram or transport error if upload failed
+- whether fallback was attempted
+- whether the final Telegram message appeared
 
 ## Skill Set
 
