@@ -229,6 +229,8 @@ If the first send fails, resend the same payload with `path` replaced by `manife
 
 If OpenClaw seems confused after a reset, restate this rule explicitly: do not install a new adapter, just reuse `message.send` with `path` for Telegram media delivery.
 
+Do not treat `message.send` returning `ok: true` as sufficient proof that the chart reached Telegram. For this repo, report chart-send success only if the chart visibly appears in Telegram or the agent has explicit confirmation that a Telegram media send succeeded rather than a text-only fallback.
+
 When the user asks to install the repo and check `SKILL.md`, follow the install-from-scratch routine in this file without asking for extra design clarification.
 
 ## OpenClaw Feedback Loop
@@ -244,6 +246,8 @@ After wiring the routine, have OpenClaw report back:
 - whether the final Telegram message appeared
 
 For normal successful setup runs, prefer a concise user-facing summary instead of raw debug output. Include detailed commands, manifests, and payloads only when something fails or the user explicitly asks for diagnostics.
+
+If the chart does not visibly appear in Telegram, treat the run as failed even if `message.send` returned `ok: true`. In that case, report the issue instead of hallucinating success.
 
 ## Skill Set
 
