@@ -1,6 +1,6 @@
 ---
 name: trackerclaw-ts
-description: Install and use the TypeScript TrackerClaw runtime for wallet portfolio reports, snapshots, history, charts, offline assets, and wallet management.
+description: Install and use the TypeScript TrackerClaw runtime for wallet portfolio reports, snapshots, history, SVG chart generation, Telegram-ready chart delivery manifests for OpenClaw, offline assets, and wallet management. Use when Codex needs to wire OpenClaw to TrackerClaw for Solana portfolio reports or chart delivery.
 ---
 
 # TrackerClaw TS
@@ -91,6 +91,41 @@ Wallet files can be:
 - `cd {baseDir} && npx tsx scriptsTS/chart_generator.ts performance`
 
 Charts are generated as SVG files in `data/charts/`.
+
+## Telegram Chart Delivery
+
+Use `scriptsTS/chart_delivery.ts` to generate chart files plus a transport manifest for OpenClaw.
+
+Generate a delivery manifest for Telegram:
+
+```bash
+cd {baseDir} && npx tsx scriptsTS/chart_delivery.ts performance
+```
+
+Generate SVG-only output when OpenClaw can only attach documents:
+
+```bash
+cd {baseDir} && npx tsx scriptsTS/chart_delivery.ts apy --format svg
+```
+
+Read the JSON manifest and hand its `telegram` block to OpenClaw:
+
+- `preferred_method`: use `sendPhoto` when a PNG exists, otherwise `sendDocument`
+- `preferred_file_path`: upload this file first
+- `fallback_method`: use `sendDocument`
+- `fallback_file_path`: upload the SVG when photo upload is unavailable
+- `caption`: reuse this string as the Telegram caption
+
+Expect this script to create:
+
+- `data/charts/<type>_<timestamp>.svg`
+- `data/charts/<type>_<timestamp>.png` unless `--format svg` is used
+
+Use this command shape in OpenClaw tool definitions:
+
+```bash
+cd {baseDir} && npx tsx scriptsTS/chart_delivery.ts <portfolio|performance|apy>
+```
 
 ## Skill Set
 

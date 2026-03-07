@@ -11,13 +11,17 @@
     "ts:history": "tsx scriptsTS/openclaw_portfolio.ts history",
     "ts:chart:portfolio": "tsx scriptsTS/chart_generator.ts portfolio",
     "ts:chart:performance": "tsx scriptsTS/chart_generator.ts performance",
-    "ts:chart:apy": "tsx scriptsTS/chart_generator.ts apy"
+    "ts:chart:apy": "tsx scriptsTS/chart_generator.ts apy",
+    "ts:deliver:portfolio": "tsx scriptsTS/chart_delivery.ts portfolio",
+    "ts:deliver:performance": "tsx scriptsTS/chart_delivery.ts performance",
+    "ts:deliver:apy": "tsx scriptsTS/chart_delivery.ts apy"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.31.1",
     "@meteora-ag/dlmm": "^1.9.3",
     "@solana/web3.js": "^1.98.4",
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
     "@types/node": "^22.13.10",
