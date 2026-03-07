@@ -7,6 +7,7 @@
     "test": "node --import tsx --test tests/**/*.test.ts",
     "typecheck": "tsc --noEmit",
     "ts:report": "tsx scriptsTS/openclaw_portfolio.ts report",
+    "ts:holders": "tsx scriptsTS/token_holder_analysis.ts",
     "ts:snapshot": "tsx scriptsTS/openclaw_portfolio.ts snapshot",
     "ts:history": "tsx scriptsTS/openclaw_portfolio.ts history",
     "ts:chart:portfolio": "tsx scriptsTS/chart_generator.ts portfolio",

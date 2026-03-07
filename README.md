@@ -15,6 +15,7 @@ TrackerClaw is a local-first Solana portfolio and DeFi tracker. The primary runt
 
 - [scriptsTS/openclaw_portfolio.ts](/c:/Users/41766/Documents/antigravity/TrackerClaw/scriptsTS/openclaw_portfolio.ts): report, snapshot, history
 - [scriptsTS/portfolio_api.ts](/c:/Users/41766/Documents/antigravity/TrackerClaw/scriptsTS/portfolio_api.ts): programmatic JSON API
+- [scriptsTS/token_holder_analysis.ts](/c:/Users/41766/Documents/antigravity/TrackerClaw/scriptsTS/token_holder_analysis.ts): top-holder portfolio analysis for a token mint
 - [scriptsTS/chart_generator.ts](/c:/Users/41766/Documents/antigravity/TrackerClaw/scriptsTS/chart_generator.ts): SVG chart generation
 - [skillsTS/openclaw-portfolio-suite/SKILL.md](/c:/Users/41766/Documents/antigravity/TrackerClaw/skillsTS/openclaw-portfolio-suite/SKILL.md): TS skill entrypoint
 - [SKILL.md](/c:/Users/41766/Documents/antigravity/TrackerClaw/SKILL.md): root install-and-run guide
@@ -44,6 +45,12 @@ One arbitrary wallet:
 
 ```bash
 npx tsx scriptsTS/openclaw_portfolio.ts report --wallet <solana-address>
+```
+
+Top token holders plus portfolio breakdown:
+
+```bash
+npx tsx scriptsTS/token_holder_analysis.ts <token-mint>
 ```
 
 Multiple arbitrary wallets:
@@ -100,6 +107,12 @@ Wallet manager:
 
 ```bash
 npx tsx scriptsTS/wallet_manager.ts list
+```
+
+Token holder analysis:
+
+```bash
+npx tsx scriptsTS/token_holder_analysis.ts <token-mint> --limit 10
 ```
 
 Charts:

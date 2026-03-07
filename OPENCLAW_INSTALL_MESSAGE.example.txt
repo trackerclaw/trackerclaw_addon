@@ -1,0 +1,17 @@
+Install and use https://github.com/trackerclaw/trackerclaw_addon.git from scratch.
+
+Use the repo SKILL.md as the source of truth.
+Follow it fully, including setup, snapshot, chart generation, and Telegram chart sending.
+
+Wallets:
+  <SOLANA_WALLET_1>
+  <SOLANA_WALLET_2>
+
+API keys:
+  HELIUS_API_KEY=<YOUR_HELIUS_API_KEY>
+  JUP_BASIC_API_KEY=<YOUR_JUP_BASIC_API_KEY>
+
+Important:
+- use the chart_delivery flow, not chart_generator
+- reuse existing message.send with path
+- do not report chart-send success unless the chart is visibly delivered in Telegram

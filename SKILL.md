@@ -24,6 +24,8 @@ JUP_BASIC_API_KEY=<YOUR_JUP_BASIC_API_KEY>
 
 Use this sequence when OpenClaw is asked to install TrackerClaw from scratch and then use it immediately.
 
+For a reusable prompt template, see `OPENCLAW_INSTALL_MESSAGE.example.txt`.
+
 1. Clone the repo and enter the repo root.
 2. Run `npm install`.
 3. Create `.env` with:
@@ -92,6 +94,19 @@ Custom wallet file:
 cd {baseDir} && npx tsx scriptsTS/openclaw_portfolio.ts report --wallet-file <path>
 ```
 
+Top token holders with wallet portfolio analysis:
+
+```bash
+cd {baseDir} && npx tsx scriptsTS/token_holder_analysis.ts <token-mint> --limit 10
+```
+
+This endpoint classifies each holder as either:
+
+- `relevant`: wallet-owned holder
+- `non_relevant`: program-owned or unresolved holder, which should be treated as contract-controlled balance such as liquidity pools, vesting wallets, escrows, or locked dev allocations
+
+When analyzing concentration or whale distribution, do not treat `non_relevant` holders as normal user wallets.
+
 ## Snapshot And History
 
 Save a JSON snapshot:
@@ -129,6 +144,7 @@ Wallet files can be:
 ## Other TS Tools
 
 - `cd {baseDir} && npx tsx scriptsTS/portfolio_api.ts --wallet <solana-address>`
+- `cd {baseDir} && npx tsx scriptsTS/token_holder_analysis.ts <token-mint> --limit 10`
 - `cd {baseDir} && npx tsx scriptsTS/portfolio_tracker.ts`
 - `cd {baseDir} && npx tsx scriptsTS/defi_tracker.ts`
 - `cd {baseDir} && npx tsx scriptsTS/wallet_report.ts <solana-address>`
