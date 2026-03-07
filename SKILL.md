@@ -16,9 +16,53 @@ cd {baseDir} && npm install
 Copy `.env.example` to `.env` and set:
 
 ```bash
-HELIUS_API_KEY=<your-helius-key>
-JUP_BASIC_API_KEY=<your-jupiter-api-key>
+HELIUS_API_KEY=<YOUR_HELIUS_API_KEY>
+JUP_BASIC_API_KEY=<YOUR_JUP_BASIC_API_KEY>
 ```
+
+## Install From Scratch
+
+Use this sequence when OpenClaw is asked to install TrackerClaw from scratch and then use it immediately.
+
+1. Clone the repo and enter the repo root.
+2. Run `npm install`.
+3. Create `.env` with:
+
+```bash
+HELIUS_API_KEY=<YOUR_HELIUS_API_KEY>
+JUP_BASIC_API_KEY=<YOUR_JUP_BASIC_API_KEY>
+```
+
+4. Create a wallet file with one of these formats.
+
+Option A, JSON:
+
+```bash
+mkdir -p data
+cat > data/wallets.json <<'EOF'
+[
+  "<SOLANA_WALLET_1>",
+  "<SOLANA_WALLET_2>"
+]
+EOF
+```
+
+Option B, plain text:
+
+```bash
+cat > wallets <<'EOF'
+<SOLANA_WALLET_1>
+<SOLANA_WALLET_2>
+EOF
+```
+
+5. Run `npx tsx scriptsTS/openclaw_portfolio.ts report`.
+6. Run `npx tsx scriptsTS/openclaw_portfolio.ts snapshot`.
+7. Run `npx tsx scriptsTS/chart_delivery.ts portfolio`.
+8. If enough snapshots already exist, also run `npx tsx scriptsTS/chart_delivery.ts performance`.
+9. Parse the chart manifest and send the preferred chart file to Telegram using the existing `message.send` tool with `path`.
+10. If the first media send fails, retry with the fallback chart file path.
+11. Reply with a concise summary of what was done and send the portfolio chart to the user.
 
 ## Primary Agent Entrypoint
 
@@ -147,7 +191,7 @@ Run `performance` only when snapshots already exist across time. If there are fe
 
 ## OpenClaw Telegram Engine Changes
 
-Modify the OpenClaw Telegram layer so it can upload a local file path returned by TrackerClaw.
+Do not install a new Telegram adapter for this workflow. Reuse OpenClaw's existing `message.send` tool and update its Telegram media-send rule for this workspace.
 
 OpenClaw must:
 
@@ -155,19 +199,37 @@ OpenClaw must:
 2. Parse stdout as JSON.
 3. Read `manifest.telegram`.
 4. Verify `manifest.telegram.preferred_file_path` exists on disk.
-5. If `manifest.telegram.preferred_method` is `sendPhoto`, upload `manifest.telegram.preferred_file_path` as a Telegram photo with `manifest.telegram.caption`.
-6. If the preferred upload fails, log the exact error and upload `manifest.telegram.fallback_file_path` with `sendDocument`.
-7. If `manifest.telegram.preferred_method` is `sendDocument`, upload `manifest.telegram.preferred_file_path` directly with `sendDocument`.
+5. Send the chart with the existing `message.send` tool using `channel: "telegram"` and `path: manifest.telegram.preferred_file_path`.
+6. Treat any Telegram `message.send` call that includes a non-empty `path` as a media send, not a text-only send.
+7. If the preferred upload fails, retry with `message.send` using `path: manifest.telegram.fallback_file_path`.
 8. Return the exact Telegram or transport error when upload fails.
 
 Assume the returned file path is on the same VPS where OpenClaw runs. Upload it from the filesystem with multipart form-data. Do not treat it as a public URL.
 
-Support this minimal Telegram behavior:
+Persist this minimal Telegram behavior in OpenClaw's capability map or workspace instructions:
 
-- `sendPhoto(chat_id, file_path, caption)`
-- `sendDocument(chat_id, file_path, caption)`
+- `message.send` without `path` -> normal Telegram text send
+- `message.send` with local `.png`, `.jpg`, or `.jpeg` `path` -> Telegram media send as photo
+- if photo send fails -> retry as document with the fallback path
+- `message.send` with non-image `path` -> Telegram document send
 
-If OpenClaw only supports text messages today, add file upload support before attempting chart delivery.
+Use this exact payload shape for TrackerClaw charts:
+
+```json
+{
+  "action": "send",
+  "channel": "telegram",
+  "target": "telegram:<CHAT_ID>",
+  "message": "<manifest.telegram.caption>",
+  "path": "<manifest.telegram.preferred_file_path>"
+}
+```
+
+If the first send fails, resend the same payload with `path` replaced by `manifest.telegram.fallback_file_path`.
+
+If OpenClaw seems confused after a reset, restate this rule explicitly: do not install a new adapter, just reuse `message.send` with `path` for Telegram media delivery.
+
+When the user asks to install the repo and check `SKILL.md`, follow the install-from-scratch routine in this file without asking for extra design clarification.
 
 ## OpenClaw Feedback Loop
 
@@ -180,6 +242,8 @@ After wiring the routine, have OpenClaw report back:
 - the exact Telegram or transport error if upload failed
 - whether fallback was attempted
 - whether the final Telegram message appeared
+
+For normal successful setup runs, prefer a concise user-facing summary instead of raw debug output. Include detailed commands, manifests, and payloads only when something fails or the user explicitly asks for diagnostics.
 
 ## Skill Set
 

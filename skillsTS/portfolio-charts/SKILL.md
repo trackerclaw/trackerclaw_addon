@@ -44,7 +44,8 @@ OpenClaw should:
 1. Run `npx tsx scriptsTS/chart_delivery.ts <portfolio|performance|apy>`.
 2. Parse stdout JSON.
 3. Read the `telegram` block.
-4. Upload `preferred_file_path` with `sendPhoto` when requested.
-5. Fallback to `sendDocument` with `fallback_file_path` if photo upload fails.
+4. Reuse the existing `message.send` tool with `channel: "telegram"`, `message: caption`, and `path: preferred_file_path`.
+5. Treat Telegram `message.send` with a non-empty `path` as a media send.
+6. Retry with `fallback_file_path` if the first send fails.
 
 Use `chart_generator.ts` only for local SVG generation when no Telegram delivery is needed.

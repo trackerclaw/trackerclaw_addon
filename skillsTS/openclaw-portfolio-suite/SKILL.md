@@ -16,8 +16,8 @@ cd {baseDir}/../.. && npm install
 Copy `.env.example` to `.env` and set:
 
 ```bash
-HELIUS_API_KEY=<your-helius-key>
-JUP_BASIC_API_KEY=<your-jupiter-api-key>
+HELIUS_API_KEY=<YOUR_HELIUS_API_KEY>
+JUP_BASIC_API_KEY=<YOUR_JUP_BASIC_API_KEY>
 ```
 
 ## Main Entrypoint
@@ -43,14 +43,43 @@ Other commands:
 Follow this routine from the beginning:
 
 1. Install dependencies.
-2. Configure `.env`.
-3. Ensure wallet input exists.
+2. Configure `.env` with placeholder values:
+
+```bash
+HELIUS_API_KEY=<YOUR_HELIUS_API_KEY>
+JUP_BASIC_API_KEY=<YOUR_JUP_BASIC_API_KEY>
+```
+
+3. Ensure wallet input exists. Preferred starter formats:
+
+JSON:
+
+```bash
+mkdir -p data
+cat > data/wallets.json <<'EOF'
+[
+  "<SOLANA_WALLET_1>",
+  "<SOLANA_WALLET_2>"
+]
+EOF
+```
+
+Plain text:
+
+```bash
+cat > wallets <<'EOF'
+<SOLANA_WALLET_1>
+<SOLANA_WALLET_2>
+EOF
+```
+
 4. Use `report` for JSON-only output.
 5. Use `snapshot` to store state in `data/openclaw_snapshots/`.
 6. Repeat snapshot creation on a schedule or after portfolio checks so historical data accumulates.
 7. Use `chart_delivery.ts portfolio` for current allocation charts.
 8. Use `chart_delivery.ts performance` for historical performance charts.
 9. Use `chart_delivery.ts apy` for DeFi yield charts.
+10. After a successful run, summarize the steps concisely and send the portfolio chart to the user.
 
 Require at least 2 snapshots from different times before using `performance`.
 
@@ -64,12 +93,21 @@ OpenClaw must:
 2. Parse stdout as JSON.
 3. Read `manifest.telegram.preferred_method`, `preferred_file_path`, `fallback_method`, `fallback_file_path`, and `caption`.
 4. Check that `preferred_file_path` exists on the VPS filesystem.
-5. If `preferred_method` is `sendPhoto`, upload `preferred_file_path` as a Telegram photo with `caption`.
-6. If the preferred upload fails, log the exact error and upload `fallback_file_path` with `sendDocument`.
-7. If `preferred_method` is `sendDocument`, upload `preferred_file_path` directly with `sendDocument`.
-8. Surface the exact Telegram or transport error if delivery fails.
+5. Reuse the existing OpenClaw `message.send` tool instead of installing a new Telegram adapter.
+6. Call `message.send` with `channel: "telegram"`, `message: caption`, and `path: preferred_file_path`.
+7. Treat any Telegram `message.send` call with a non-empty `path` as a media send.
+8. If the preferred upload fails, retry with `path: fallback_file_path`.
+9. Surface the exact Telegram or transport error if delivery fails.
 
 Upload files from the local VPS filesystem with multipart form-data. Do not treat the returned path as a public URL.
+
+Persist this OpenClaw rule for the workspace:
+
+- `message.send` without `path` -> normal text send
+- `message.send` with image `path` -> Telegram photo send
+- failed image send -> retry with fallback path as document send
+
+When the user says to install the repo and check `SKILL.md`, execute this workflow directly from the skill without requiring additional setup instructions.
 
 ## Notes
 
