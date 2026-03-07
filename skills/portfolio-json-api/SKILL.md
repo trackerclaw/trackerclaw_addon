@@ -1,73 +1,34 @@
 ---
 name: portfolio-json-api
-description: Return machine-readable Solana portfolio JSON for arbitrary wallet addresses. Use when an agent such as OpenClaw needs a deterministic JSON response for one wallet or a list of wallets, including spot token balances, DeFi positions, and combined USD totals.
+description: Return machine-readable Solana portfolio JSON with the TrackerClaw TypeScript runtime for one wallet or many wallets.
 ---
 
 # Portfolio JSON API
 
-Run the JSON API script for arbitrary Solana addresses.
+Use this skill when an agent needs structured JSON instead of formatted text.
 
-## Use
+## Run
 
-For one wallet:
+Single wallet:
 
 ```bash
-cd {baseDir}/../.. && python scripts/portfolio_api.py --wallet <solana-address>
+cd {baseDir}/../.. && npx tsx scriptsTS/portfolio_api.ts --wallet <solana-address>
 ```
 
-For multiple wallets:
+Multiple wallets:
 
 ```bash
-cd {baseDir}/../.. && python scripts/portfolio_api.py --wallets <addr-1> <addr-2> <addr-3>
+cd {baseDir}/../.. && npx tsx scriptsTS/portfolio_api.ts --wallets <addr-1> <addr-2> <addr-3>
 ```
 
 ## Output
 
 The script prints JSON only.
 
-Single-wallet output shape:
-
-```json
-{
-  "address": "...",
-  "spot": {
-    "total_usd": 0,
-    "token_count": 0,
-    "visible_token_count": 0,
-    "hidden_token_count": 0,
-    "tokens": []
-  },
-  "defi": {
-    "total_usd": 0,
-    "protocol_count": 0,
-    "position_count": 0,
-    "protocols": [],
-    "positions": []
-  },
-  "totals": {
-    "spot_usd": 0,
-    "defi_usd": 0,
-    "combined_usd": 0
-  }
-}
-```
-
-Multi-wallet output shape:
-
-```json
-{
-  "wallet_count": 0,
-  "wallets": [],
-  "totals": {
-    "spot_usd": 0,
-    "defi_usd": 0,
-    "combined_usd": 0
-  }
-}
-```
+- Single-wallet output includes `address`, `spot`, `defi`, and `totals`
+- Multi-wallet output includes `wallet_count`, `wallets`, and combined `totals`
 
 ## Notes
 
-- Accept arbitrary wallet addresses directly. Do not require entries in `data/wallets.json`.
-- Use this skill when a downstream agent or automation needs structured JSON instead of markdown text.
-- Present the JSON output directly or parse it for follow-up automation.
+- Accept arbitrary wallet addresses directly; `data/wallets.json` is not required
+- Use this skill for downstream automation, snapshots, or follow-up parsing

@@ -1,49 +1,33 @@
 ---
 name: defi-tracker
-description: Track DeFi positions across Jupiter Lend, Kamino, and Marginfi on Solana
+description: Track Solana DeFi positions with the TrackerClaw TypeScript runtime across supported protocols such as Jupiter, Kamino, and Meteora.
 ---
 
-# DeFi Position Tracker
+# DeFi Tracker
 
-You are the TrackerClaw DeFi tracking agent. When the user asks about their DeFi positions, lending, borrowing, yields, or liquidation risk, use this skill.
+Use this skill when the user asks about lending, borrowing, LP exposure, leverage, APY, or protocol positions.
 
-## What this skill does
+## Run
 
-Scans wallet transaction history via Helius to detect DeFi protocol interactions, then queries protocol APIs (Kamino, Marginfi) for current positions including supplied/borrowed amounts, APY, and health factors.
-
-## How to use
+All tracked wallets:
 
 ```bash
-cd {baseDir}/../.. && python scripts/defi_tracker.py
+cd {baseDir}/../.. && npx tsx scriptsTS/defi_tracker.ts
 ```
 
-### Options
+Options:
 
-- All wallets, all protocols: `python scripts/defi_tracker.py`
-- Single wallet: `python scripts/defi_tracker.py --wallet Main`
-- Single protocol: `python scripts/defi_tracker.py --protocol kamino`
-- JSON output: `python scripts/defi_tracker.py --json`
+- `npx tsx scriptsTS/defi_tracker.ts --wallet Main`
+- `npx tsx scriptsTS/defi_tracker.ts --protocol kamino`
+- `npx tsx scriptsTS/defi_tracker.ts --json`
 
-### Supported protocols
-- `jupiter-lend` — Jupiter Lend (supply/borrow)
-- `kamino` — Kamino Earn + Kamino Lend
-- `marginfi` — Marginfi v2
+## Output
 
-## When to use
+- Text mode prints positions grouped by wallet and protocol
+- JSON mode prints the raw position payload
+- The script also writes the latest JSON to `data/defi_positions.json`
 
-Use this skill when the user says things like:
-- "show my DeFi positions"
-- "what am I lending?"
-- "any liquidation risk?"
-- "what's my yield?"
-- "show my Kamino positions"
-- "what's my total yield this week?"
-- "am I borrowing anything?"
+## Notes
 
-## Output format
-
-Shows per-protocol positions with:
-- Protocol name and position type (Supply/Borrow)
-- Asset and USD value
-- APY percentage
-- Health factor (for lending positions)
+- The TS runtime uses protocol APIs and helper integrations already bundled in the repo
+- Supported detection includes Jupiter, Kamino, Meteora, wallet-NFT-backed LP discovery, and fallback program scans

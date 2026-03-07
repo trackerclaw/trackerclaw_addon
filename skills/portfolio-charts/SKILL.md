@@ -1,51 +1,32 @@
 ---
 name: portfolio-charts
-description: Generate portfolio allocation, performance, and yield charts as PNG images
+description: Generate portfolio allocation, performance, and DeFi APY SVG charts with the TrackerClaw TypeScript runtime.
 ---
 
-# Portfolio Chart Generator
+# Portfolio Charts
 
-You are the TrackerClaw chart generator. When the user asks for visual charts or graphs of their portfolio, use this skill.
+Use this skill when the user wants a visual chart of portfolio allocation, performance history, or DeFi yields.
 
-## What this skill does
+## Run
 
-Generates professional dark-themed charts using matplotlib and saves them as PNG files. The charts can be sent directly via Telegram/Discord.
-
-## How to use
+Performance:
 
 ```bash
-cd {baseDir}/../.. && python scripts/chart_generator.py <type>
+cd {baseDir}/../.. && npx tsx scriptsTS/chart_generator.ts performance
 ```
 
-### Chart types
+Other chart types:
 
-| Type | Command | Description |
-|------|---------|-------------|
-| Portfolio allocation | `python scripts/chart_generator.py portfolio` | Pie/donut chart showing token allocation |
-| Performance | `python scripts/chart_generator.py performance` | Line chart of portfolio value over time |
-| DeFi APY | `python scripts/chart_generator.py apy` | Bar chart comparing DeFi yields |
-
-## When to use
-
-Use this skill when the user says things like:
-- "chart portfolio" or "show allocation chart"
-- "chart performance" or "how's my portfolio doing?"
-- "chart apy" or "compare my yields"
-- "show me a chart"
-- "visualize my portfolio"
+- `npx tsx scriptsTS/chart_generator.ts portfolio`
+- `npx tsx scriptsTS/chart_generator.ts apy`
 
 ## Prerequisites
 
-- **Portfolio chart**: Requires running `portfolio_tracker.py` first (needs a snapshot in `data/snapshots/`)
-- **Performance chart**: Needs at least 2 daily snapshots (run `portfolio_tracker.py` daily)
-- **APY chart**: Needs DeFi position data (run `defi_tracker.py --json` and save output)
+- `portfolio`: requires at least one saved snapshot in `data/openclaw_snapshots/` or `data/snapshots/`
+- `performance`: requires at least two valid saved snapshots
+- `apy`: requires APY-bearing DeFi positions in the latest OpenClaw snapshot
 
 ## Output
 
-Charts are saved to `data/charts/<type>_<timestamp>.png`. The script prints the file path.
-
-After generating the chart, send the PNG file to the user. In Telegram, use the file sending capability. In Discord, attach the image.
-
-## Chart style
-
-All charts use a premium dark theme (#0D1117 background) with vibrant accent colors matching a crypto dashboard aesthetic.
+- Charts are saved to `data/charts/<type>_<timestamp>.svg`
+- Return the saved file path to the user and reference the generated image directly

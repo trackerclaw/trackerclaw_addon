@@ -1,19 +1,16 @@
 ---
-name: trackerclaw
-description: Install and use this repository as an OpenClaw-compatible portfolio tracker package. Use when an agent needs one root-level instruction file for cloning the repo, installing dependencies, running JSON portfolio scripts, saving JSON snapshots, reading historical performance, and querying wallets from wallet files or direct Solana addresses.
+name: trackerclaw-ts
+description: Install and use the TypeScript TrackerClaw runtime for wallet portfolio reports, snapshots, history, charts, offline assets, and wallet management.
 ---
 
-# TrackerClaw
+# TrackerClaw TS
 
-Use this repository as a package for an existing OpenClaw claw.
+Use this repository as a TypeScript package for OpenClaw-compatible portfolio tracking.
 
 ## Install
 
 ```bash
-git clone <repo-url> TrackerClaw
-cd TrackerClaw
-pip install -r requirements.txt
-npm install
+cd {baseDir} && npm install
 ```
 
 Copy `.env.example` to `.env` and set:
@@ -25,30 +22,30 @@ JUP_BASIC_API_KEY=<your-jupiter-api-key>
 
 ## Primary Agent Entrypoint
 
-Use `scripts/openclaw_portfolio.py` for machine-readable automation.
+Use `scriptsTS/openclaw_portfolio.ts` for machine-readable automation.
 
 Current portfolio JSON:
 
 ```bash
-cd {baseDir} && python scripts/openclaw_portfolio.py report
+cd {baseDir} && npx tsx scriptsTS/openclaw_portfolio.ts report
 ```
 
 Single arbitrary wallet:
 
 ```bash
-cd {baseDir} && python scripts/openclaw_portfolio.py report --wallet <solana-address>
+cd {baseDir} && npx tsx scriptsTS/openclaw_portfolio.ts report --wallet <solana-address>
 ```
 
 Multiple arbitrary wallets:
 
 ```bash
-cd {baseDir} && python scripts/openclaw_portfolio.py report --wallets <addr-1> <addr-2>
+cd {baseDir} && npx tsx scriptsTS/openclaw_portfolio.ts report --wallets <addr-1> <addr-2>
 ```
 
 Custom wallet file:
 
 ```bash
-cd {baseDir} && python scripts/openclaw_portfolio.py report --wallet-file <path>
+cd {baseDir} && npx tsx scriptsTS/openclaw_portfolio.ts report --wallet-file <path>
 ```
 
 ## Snapshot And History
@@ -56,20 +53,20 @@ cd {baseDir} && python scripts/openclaw_portfolio.py report --wallet-file <path>
 Save a JSON snapshot:
 
 ```bash
-cd {baseDir} && python scripts/openclaw_portfolio.py snapshot
+cd {baseDir} && npx tsx scriptsTS/openclaw_portfolio.ts snapshot
 ```
 
 Read historical performance JSON:
 
 ```bash
-cd {baseDir} && python scripts/openclaw_portfolio.py history --days 30
+cd {baseDir} && npx tsx scriptsTS/openclaw_portfolio.ts history --days 30
 ```
 
 Snapshots are stored in `data/openclaw_snapshots/`.
 
 ## Wallet Sources
 
-The repo can read:
+The runtime can read:
 
 - `data/wallets.json`
 - `myWallets.json`
@@ -83,22 +80,28 @@ Wallet files can be:
 - JSON array of objects containing `address`
 - plain text, one address per line
 
-## Human-Readable Tools
+## Other TS Tools
 
-- `python scripts/wallet_report.py <solana-address>`
-- `python scripts/portfolio_tracker.py`
-- `python scripts/defi_tracker.py`
-- `python scripts/chart_generator.py performance`
+- `cd {baseDir} && npx tsx scriptsTS/portfolio_api.ts --wallet <solana-address>`
+- `cd {baseDir} && npx tsx scriptsTS/portfolio_tracker.ts`
+- `cd {baseDir} && npx tsx scriptsTS/defi_tracker.ts`
+- `cd {baseDir} && npx tsx scriptsTS/wallet_report.ts <solana-address>`
+- `cd {baseDir} && npx tsx scriptsTS/wallet_manager.ts list`
+- `cd {baseDir} && npx tsx scriptsTS/offline_assets.ts list`
+- `cd {baseDir} && npx tsx scriptsTS/chart_generator.ts performance`
+
+Charts are generated as SVG files in `data/charts/`.
 
 ## Skill Set
 
-Install these skill folders into the OpenClaw workspace when needed:
+Install these TypeScript skill folders into the OpenClaw workspace when needed:
 
-- `skills/portfolio-json-api`
-- `skills/portfolio-tracker`
-- `skills/defi-tracker`
-- `skills/wallet-manager`
-- `skills/offline-assets`
-- `skills/portfolio-charts`
+- `skillsTS/openclaw-portfolio-suite`
+- `skillsTS/portfolio-json-api`
+- `skillsTS/portfolio-tracker`
+- `skillsTS/defi-tracker`
+- `skillsTS/wallet-manager`
+- `skillsTS/offline-assets`
+- `skillsTS/portfolio-charts`
 
-Use this root `SKILL.md` as the master install-and-operate guide.
+Use this root `SKILL.md` as the master TypeScript install-and-operate guide.

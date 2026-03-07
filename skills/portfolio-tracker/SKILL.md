@@ -1,49 +1,31 @@
 ---
 name: portfolio-tracker
-description: Track your full Solana portfolio — total net worth, token positions, USD values across all wallets
+description: Track Solana spot balances and token-level USD values with the TrackerClaw TypeScript runtime.
 ---
 
 # Portfolio Tracker
 
-You are the TrackerClaw portfolio tracking agent. When the user asks about their portfolio, net worth, token holdings, balances, or wants to refresh their data, use this skill.
+Use this skill when the user asks for a spot-token portfolio view, balances, holdings, or wallet net worth.
 
-## What this skill does
+## Run
 
-Fetches on-chain token positions for all tracked Solana wallets using the Helius DAS API, gets live USD prices from Jupiter, and presents a formatted summary.
-
-## How to use
-
-Run the portfolio tracker script from the project directory:
+All tracked wallets:
 
 ```bash
-cd {baseDir}/../.. && python scripts/portfolio_tracker.py
+cd {baseDir}/../.. && npx tsx scriptsTS/portfolio_tracker.ts
 ```
 
-### Options
+Options:
 
-- Show all wallets: `python scripts/portfolio_tracker.py`
-- Single wallet: `python scripts/portfolio_tracker.py --wallet Main`
-- JSON output: `python scripts/portfolio_tracker.py --json`
+- `npx tsx scriptsTS/portfolio_tracker.ts --wallet Main`
+- `npx tsx scriptsTS/portfolio_tracker.ts --json`
 
-## When to use
+## Output
 
-Use this skill when the user says things like:
-- "show my portfolio"
-- "what's my net worth?"
-- "how much SOL do I have?"
-- "refresh portfolio"
-- "show my tokens"
-- "what's in my wallets?"
+- Text mode prints a portfolio summary grouped by wallet
+- JSON mode prints the raw snapshot payload
+- The script saves a legacy-style spot snapshot to `data/snapshots/`
 
-## Output format
+## Requirements
 
-Present the output directly to the user. The script produces markdown-formatted text with:
-- Total net worth in USD
-- Per-wallet breakdown (if multiple wallets)
-- Token list: symbol, USD value, amount, price
-
-The script also saves a daily snapshot to `data/snapshots/` for performance charts.
-
-## Dependencies
-
-Requires HELIUS_API_KEY in the .env file (already configured).
+- `HELIUS_API_KEY` must be set in `.env`
