@@ -34,9 +34,28 @@ Other commands:
 - `npx tsx scriptsTS/openclaw_portfolio.ts history --days 30`
 - `npx tsx scriptsTS/openclaw_portfolio.ts report --wallet <solana-address>`
 - `npx tsx scriptsTS/openclaw_portfolio.ts report --wallet-file <path>`
+- `npx tsx scriptsTS/wallet_transaction_analysis.ts <solana-address> --json --max-transactions 120`
 - `npx tsx scriptsTS/chart_delivery.ts portfolio`
 - `npx tsx scriptsTS/chart_delivery.ts performance`
 - `npx tsx scriptsTS/chart_delivery.ts apy`
+
+For requests like "analyze this wallet", "analyze this wallet's transactions", or "wallet behavior analysis", prefer:
+
+```bash
+cd {baseDir}/../.. && npx tsx scriptsTS/wallet_transaction_analysis.ts <solana-address> --json --max-transactions 120
+```
+
+Optional parameters:
+
+- `--max-transactions <n>` with default `120`
+- `--days <n>` with default `90`
+
+Interpretation order for lower-budget OpenClaw agents:
+
+1. Read `ai_digest` first.
+2. Then read `summary_conclusions`.
+3. Use `sampled_pnl`, `trading_patterns`, and `token_conclusions` only when more detail is needed.
+4. If `guardrails.incomplete_history` is `true`, mention that the analysis is based on a capped sample.
 
 ## Workflow
 

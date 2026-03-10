@@ -16,6 +16,7 @@ TrackerClaw is a local-first Solana portfolio and DeFi tracker. The primary runt
 - [scriptsTS/openclaw_portfolio.ts](/c:/Users/41766/Documents/antigravity/TrackerClaw/scriptsTS/openclaw_portfolio.ts): report, snapshot, history
 - [scriptsTS/portfolio_api.ts](/c:/Users/41766/Documents/antigravity/TrackerClaw/scriptsTS/portfolio_api.ts): programmatic JSON API
 - [scriptsTS/token_holder_analysis.ts](/c:/Users/41766/Documents/antigravity/TrackerClaw/scriptsTS/token_holder_analysis.ts): top-holder portfolio analysis for a token mint
+- [scriptsTS/wallet_transaction_analysis.ts](/c:/Users/41766/Documents/antigravity/TrackerClaw/scriptsTS/wallet_transaction_analysis.ts): transaction-based wallet behaviour and pattern analysis
 - [scriptsTS/chart_generator.ts](/c:/Users/41766/Documents/antigravity/TrackerClaw/scriptsTS/chart_generator.ts): SVG chart generation
 - [skillsTS/openclaw-portfolio-suite/SKILL.md](/c:/Users/41766/Documents/antigravity/TrackerClaw/skillsTS/openclaw-portfolio-suite/SKILL.md): TS skill entrypoint
 - [SKILL.md](/c:/Users/41766/Documents/antigravity/TrackerClaw/SKILL.md): root install-and-run guide
@@ -51,6 +52,12 @@ Top token holders plus portfolio breakdown:
 
 ```bash
 npx tsx scriptsTS/token_holder_analysis.ts <token-mint>
+```
+
+Transaction-based wallet analysis with bot-wallet safeguards:
+
+```bash
+npm run ts:wallet:analysis -- <solana-address> --json --days 90 --max-transactions 400
 ```
 
 Multiple arbitrary wallets:

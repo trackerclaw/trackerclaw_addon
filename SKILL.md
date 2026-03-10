@@ -94,6 +94,21 @@ Custom wallet file:
 cd {baseDir} && npx tsx scriptsTS/openclaw_portfolio.ts report --wallet-file <path>
 ```
 
+Wallet transaction analysis JSON for one arbitrary wallet:
+
+```bash
+cd {baseDir} && npx tsx scriptsTS/wallet_transaction_analysis.ts <solana-address> --json --max-transactions 120
+```
+
+Optional parameters:
+
+- `--max-transactions <n>`: default `120`
+- `--days <n>`: default `90`
+
+When the user asks something like "analyze this wallet", "wallet behavior analysis", "analyze wallet transactions", or "tell me about this wallet", OpenClaw should prefer this command over the basic portfolio report.
+
+OpenClaw should read `ai_digest` first for low-budget interpretation, then use `sampled_pnl`, `trading_patterns`, `token_conclusions`, and `recent_trades` only when more evidence is needed.
+
 Top token holders with wallet portfolio analysis:
 
 ```bash
@@ -145,6 +160,7 @@ Wallet files can be:
 
 - `cd {baseDir} && npx tsx scriptsTS/portfolio_api.ts --wallet <solana-address>`
 - `cd {baseDir} && npx tsx scriptsTS/token_holder_analysis.ts <token-mint> --limit 10`
+- `cd {baseDir} && npx tsx scriptsTS/wallet_transaction_analysis.ts <solana-address> --json --max-transactions 120`
 - `cd {baseDir} && npx tsx scriptsTS/portfolio_tracker.ts`
 - `cd {baseDir} && npx tsx scriptsTS/defi_tracker.ts`
 - `cd {baseDir} && npx tsx scriptsTS/wallet_report.ts <solana-address>`
@@ -204,6 +220,16 @@ Recreate the full chart workflow with this sequence:
 9. Use `npx tsx scriptsTS/chart_delivery.ts apy` for DeFi yield charts.
 
 Run `performance` only when snapshots already exist across time. If there are fewer than 2 snapshots, return the TrackerClaw error directly.
+
+For wallet analysis requests, use this routine:
+
+1. Parse the wallet address from the user request.
+2. Run `npx tsx scriptsTS/wallet_transaction_analysis.ts <solana-address> --json --max-transactions 120` unless the user specifies a different sample size.
+3. If the user asks for more history, increase `--max-transactions` explicitly.
+4. Parse stdout as JSON.
+5. Read `ai_digest` first for the summary.
+6. Use `summary_conclusions`, `token_conclusions`, and `sampled_pnl` for the user-facing answer.
+7. Mention when `guardrails.incomplete_history` is `true`, because the transaction sample is capped.
 
 ## OpenClaw Telegram Engine Changes
 
