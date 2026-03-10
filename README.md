@@ -59,6 +59,30 @@ HELIUS_API_KEY=your-helius-api-key
 JUP_BASIC_API_KEY=your-jupiter-api-key
 ```
 
+## One Click Install
+
+Add these free API keys, then copy this message to your OpenClaw bot:
+
+```text
+Install and use https://github.com/trackerclaw/trackerclaw_addon.git from scratch.
+
+Use the repo SKILL.md as the source of truth.
+Follow it fully, including setup, snapshot, chart generation, and Telegram chart sending.
+
+for wallets:
+   {wallet key 1}
+   {wallet key 2}
+
+api keys:
+   HELIUS_API_KEY={your free Helius API key}
+   JUP_BASIC_API_KEY={your free JUP basic API key}
+
+Important:
+- use the chart_delivery flow, not chart_generator
+- reuse existing message.send with path
+- do not report chart-send success unless the chart is visibly delivered in Telegram
+```
+
 ## OpenClaw Usage
 
 ### 1. Portfolio JSON
